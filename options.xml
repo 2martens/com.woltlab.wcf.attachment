@@ -15,6 +15,10 @@
 				<defaultvalue>1</defaultvalue>
 			</option>
 			
+			<option name="attachment_storage">
+				<categoryname>message.attachment</categoryname>
+				<optiontype>text</optiontype>
+			</option>
 			<option name="attachment_enable_thumbnails">
 				<categoryname>message.attachment</categoryname>
 				<optiontype>boolean</optiontype>
@@ -23,12 +27,12 @@
 			<option name="attachment_thumbnail_height">
 				<categoryname>message.attachment</categoryname>
 				<optiontype>integer</optiontype>
-				<defaultvalue><![CDATA[160]]></defaultvalue>
+				<defaultvalue><![CDATA[320]]></defaultvalue>
 			</option>
 			<option name="attachment_thumbnail_width">
 				<categoryname>message.attachment</categoryname>
 				<optiontype>integer</optiontype>
-				<defaultvalue><![CDATA[160]]></defaultvalue>
+				<defaultvalue><![CDATA[320]]></defaultvalue>
 			</option>
 		</options>
 	</import>

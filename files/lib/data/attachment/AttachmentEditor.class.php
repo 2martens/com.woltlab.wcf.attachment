@@ -1,5 +1,5 @@
 <?php
-namespace wcf\data\bbcode;
+namespace wcf\data\attachment;
 use wcf\data\DatabaseObjectEditor;
 
 /**
