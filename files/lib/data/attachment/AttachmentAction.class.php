@@ -60,7 +60,6 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		$files = $this->parameters['__files']->getFiles();
 		foreach ($files as $file) {
 			$data = array(
-				'packageID' => PACKAGE_ID,
 				'objectTypeID' => $objectType->objectTypeID,
 				'objectID' => intval($this->parameters['objectID']),
 				'userID' => WCF::getUser()->userID,
