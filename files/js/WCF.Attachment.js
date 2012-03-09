@@ -41,8 +41,24 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 			var $li = this._uploadMatrix[uploadID][$i];
 			var $filename = $li.data('filename');
 			if (data.returnValues[$filename]) {
-				$li.find('img').attr('src', data.returnValues[$filename]['tinyURL']);
+				// show thumbnail
+				if (data.returnValues[$filename]['tinyURL']) {
+					$li.find('img').attr('src', data.returnValues[$filename]['tinyURL']);
+				}
+				else {
+					// show file icon
+					$li.find('img').attr('src', WCF.Icon.get('wcf.icon.attachment'));
+				}
+				
+				// remove progress bar
+				$li.find('progress').remove();
+				
+				// TODO: add buttons
+				
+			}
+			else {
+				// error handling
 			}
 		}
-	},
+	}
 });
