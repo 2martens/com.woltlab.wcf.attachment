@@ -4,6 +4,7 @@ use wcf\data\attachment\Attachment;
 use wcf\data\attachment\AttachmentEditor;
 use wcf\system\exception\IllegalLinkException;
 use wcf\system\exception\PermissionDeniedException;
+use wcf\system\io\File;
 use wcf\system\WCF;
 
 /**
@@ -105,7 +106,39 @@ class AttachmentPage extends AbstractPage {
 			$mimeType = $this->attachment->fileType;
 			$filesize = $this->attachment->filesize;
 			$location = $this->attachment->getLocation();
-		}		
+		}
+
+		// range support
+		$startByte = 0;
+		$endByte = $filesize - 1;
+		if (!$this->tiny && !$this->thumbnail) {
+			if (!empty($_SERVER['HTTP_RANGE'])) {
+				if (preg_match('/^bytes=(-?\d+)(?:-(\d+))?$', $_SERVER['HTTP_RANGE'], $match)) {
+					$first = intval($match[1]);
+					$last = (isset($match[2]) ? intval($match[2]) : 0);
+					
+					if ($first < 0) {
+						// negative value; subtract from filesize
+						$startByte = $filesize + $first;
+					}
+					else {
+						$startByte = $first;
+						if ($last > 0) {
+							$endByte = $last;
+						}					
+					}
+					
+					// validate given range
+					if ($startByte < 0 || $startByte >= $filesize || $endByte >= $filesize) {
+						// invalid range given
+						@header('HTTP/1.1 416 Requested Range Not Satisfiable');
+						@header('Accept-Ranges: bytes');
+						@header('Content-Range: bytes */'.$filesize);
+						exit;
+					}
+				}
+			}
+		}
 		
 		// send headers
 		// file type
@@ -115,22 +148,39 @@ class AttachmentPage extends AbstractPage {
 		// file name
 		@header('Content-disposition: '.(!in_array($mimeType, self::$inlineMimeTypes) ? 'attachment; ' : 'inline; ').'filename="'.$this->attachment->filename.'"');
 			
+		// range
+		if ($startByte > 0 || $endByte < $filesize - 1) {
+			@header('HTTP/1.1 206 Partial Content');
+			@header('Content-Range: bytes '.$startByte.'-'.$endByte.'/'.$filesize);
+		}
+		if (!$this->tiny && !$this->thumbnail) {
+			@header('ETag: "'.$this->attachmentID.'"');
+			@header('Accept-Ranges: bytes');
+		}
+		
 		// send file size
-		@header('Content-Length: '.$filesize);
+		@header('Content-Length: '.($endByte + 1 - $startByte));
 			
-		// no cache headers
-		if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
-			// internet explorer doesn't cache files downloaded from a https website, if 'Pragma: no-cache' was sent 
-			// @see http://support.microsoft.com/kb/316431/en
-			@header('Pragma: public');
-		}
-		else {
-			@header('Pragma: no-cache');
-		}
-		@header('Expires: 0');
+		// cache headers
+		@header('Cache-control: max-age=31536000, private');
+		@header('Expires: '.gmdate('D, d M Y H:i:s', TIME_NOW + 31536000).' GMT');
+		@header('Last-Modified: '.gmdate('D, d M Y H:i:s', $this->attachment->uploadTime).' GMT');
 			
 		// show attachment
-		readfile($location);
+		if ($startByte > 0 || $endByte < $filesize - 1) {
+			$file = new File($location, 'rb');
+			if ($startByte > 0) $file->seek($startByte);
+			while ($startByte <= $endByte) {
+				$remainingBytes = $endByte - $startByte;
+				$readBytes = ($remainingBytes > 1048576) ? 1048576 : $remainingBytes + 1;
+				echo $file->read($readBytes);
+				$startByte += $readBytes;
+			}
+			$file->close();
+		}
+		else {
+			readfile($location);
+		}
 		exit;
 	}
 }
