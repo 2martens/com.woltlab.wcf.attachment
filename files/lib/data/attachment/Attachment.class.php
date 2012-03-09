@@ -4,9 +4,6 @@ use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\DatabaseObject;
 use wcf\system\request\IRouteController;
 
-// TODO: debug; remove later
-if (!defined('ATTACHMENT_STORAGE')) define('ATTACHMENT_STORAGE', '');
-
 /**
  * Represents an attachment.
  * 

@@ -1,16 +1,11 @@
 <?php
 namespace wcf\data\attachment;
-use wcf\system\request\LinkHandler;
-
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\AbstractDatabaseObjectAction;
 use wcf\system\exception\ValidateActionException;
 use wcf\system\image\ImageHandler;
+use wcf\system\request\LinkHandler;
 use wcf\system\WCF;
-
-// TODO: debug; remove later
-if (!defined('ATTACHMENT_THUMBNAIL_WIDTH')) define('ATTACHMENT_THUMBNAIL_WIDTH', 320);
-if (!defined('ATTACHMENT_THUMBNAIL_HEIGHT')) define('ATTACHMENT_THUMBNAIL_HEIGHT', 320);
 
 /**
  * Executes attachment-related actions.
@@ -104,9 +99,11 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		}
 		
 		// generate thumbnails
-		if (count($thumbnails)) {
-			$action = new AttachmentAction($thumbnails, 'generateThumbnails');
-			$action->executeAction();
+		if (ATTACHMENT_ENABLE_THUMBNAILS) {
+			if (count($thumbnails)) {
+				$action = new AttachmentAction($thumbnails, 'generateThumbnails');
+				$action->executeAction();
+			}
 		}
 		
 		// return result

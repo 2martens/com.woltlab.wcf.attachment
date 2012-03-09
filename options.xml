@@ -23,6 +23,7 @@
 				<categoryname>message.attachment</categoryname>
 				<optiontype>boolean</optiontype>
 				<defaultvalue><![CDATA[1]]></defaultvalue>
+				<enableoptions>attachment_thumbnail_height,attachment_thumbnail_width</enableoptions>
 			</option>
 			<option name="attachment_thumbnail_height">
 				<categoryname>message.attachment</categoryname>
