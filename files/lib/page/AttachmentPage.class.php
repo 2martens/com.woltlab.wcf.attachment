@@ -3,6 +3,7 @@ namespace wcf\page;
 use wcf\data\attachment\Attachment;
 use wcf\data\attachment\AttachmentEditor;
 use wcf\system\exception\IllegalLinkException;
+use wcf\system\exception\PermissionDeniedException;
 use wcf\system\WCF;
 
 /**
@@ -70,7 +71,7 @@ class AttachmentPage extends AbstractPage {
 		
 		// check permissions
 		if (!$this->attachment->checkPermissions()) {
-			throw new IllegalLinkException();
+			throw new PermissionDeniedException();
 		}
 	}
 	
