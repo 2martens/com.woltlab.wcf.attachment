@@ -30,11 +30,26 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 * 
 	 * @return boolean
 	 */
-	public function checkPermissions() {
+	public function canDownload() {
 		$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
 		$processor = $objectType->getProcessor();
 		if ($processor !== null) {
-			return $processor->checkPermissions($this->objectID);
+			return $processor->canDownload($this->objectID);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Returns true, if a user has the permission to view the preview of this attachment.
+	 * 
+	 * @return boolean
+	 */
+	public function canViewPreview() {
+		$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
+		$processor = $objectType->getProcessor();
+		if ($processor !== null) {
+			return $processor->canViewPreview($this->objectID);
 		}
 		
 		return true;

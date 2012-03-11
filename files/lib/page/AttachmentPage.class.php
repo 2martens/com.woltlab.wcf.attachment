@@ -71,7 +71,12 @@ class AttachmentPage extends AbstractPage {
 		}
 		
 		// check permissions
-		if (!$this->attachment->checkPermissions()) {
+		if ($this->tiny || $this->thumbnail) {
+			if ($this->attachment->canViewPreview()) {
+				throw new PermissionDeniedException();
+			}
+		}
+		else if (!$this->attachment->canDownload()) {
 			throw new PermissionDeniedException();
 		}
 	}
