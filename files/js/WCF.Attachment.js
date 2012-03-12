@@ -12,20 +12,23 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	_objectType: '',
 	_objectID: 0,
 	_tmpHash: '',
+	_parentObjectID: 0,
 	
-	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash) {
+	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash, parentObjectID) {
 		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true });
 		
 		this._objectType = objectType;
 		this._objectID = objectID;
 		this._tmpHash = tmpHash;
+		this._parentObjectID = parentObjectID;
 	},
 
 	_getParameters: function() {
 		return {
 			objectType: this._objectType,
 			objectID: this._objectID,
-			tmpHash: this._tmpHash
+			tmpHash: this._tmpHash,
+			parentObjectID: this._parentObjectID
 		};
 	},
 	

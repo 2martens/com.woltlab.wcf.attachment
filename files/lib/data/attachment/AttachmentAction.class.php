@@ -38,7 +38,10 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		// TODO: validate object id / tmpHash
 		
-		// TODO: check upload permissions
+		// check upload permissions
+		if ($objectType->canUpload((!empty($this->parameters['objectID']) ? intval($this->parameters['objectID']) : 0), (!empty($this->parameters['parentObjectID']) ? intval($this->parameters['parentObjectID']) : 0))) {
+			throw new ValidateActionException('Insufficient permissions');
+		}
 		
 		// TODO: check max filesize, allowed file extensions etc.
 	}
