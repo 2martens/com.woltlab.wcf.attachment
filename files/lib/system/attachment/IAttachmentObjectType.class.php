@@ -37,7 +37,7 @@ interface IAttachmentObjectType {
 	/**
 	 * Returns the allowed file extensions.
 	 * 
-	 * @return	string
+	 * @return	array<string>
 	 */
 	public function getAllowedExtensions();
 	

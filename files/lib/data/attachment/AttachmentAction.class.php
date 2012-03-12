@@ -36,14 +36,18 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			throw new ValidateActionException("invalid object type '".$this->parameters['objectType']."' given");
 		}
 		
-		// TODO: validate object id / tmpHash
+		// get processor
+		$processor = $objectType->getProcessor();
 		
 		// check upload permissions
-		if ($objectType->canUpload((!empty($this->parameters['objectID']) ? intval($this->parameters['objectID']) : 0), (!empty($this->parameters['parentObjectID']) ? intval($this->parameters['parentObjectID']) : 0))) {
+		if (!$processor->canUpload((!empty($this->parameters['objectID']) ? intval($this->parameters['objectID']) : 0), (!empty($this->parameters['parentObjectID']) ? intval($this->parameters['parentObjectID']) : 0))) {
 			throw new ValidateActionException('Insufficient permissions');
 		}
 		
-		// TODO: check max filesize, allowed file extensions etc.
+		// TODO: check max count of uploads
+		
+		// check max filesize, allowed file extensions etc.
+		$this->parameters['__files']->validateFiles($processor->getMaxSize(), $processor->getAllowedExtensions());
 	}
 	
 	/**
@@ -54,9 +58,14 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		$objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $this->parameters['objectType']);
 		
 		// save files
-		$thumbnails = $attachments = array();
+		$thumbnails = $attachments = $failedUploads = array();
 		$files = $this->parameters['__files']->getFiles();
 		foreach ($files as $file) {
+			if ($file->getValidationErrorType()) {
+				$failedUploads[] = $file;
+				continue;
+			}
+			
 			$data = array(
 				'objectTypeID' => $objectType->objectTypeID,
 				'objectID' => intval($this->parameters['objectID']),
@@ -110,9 +119,9 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		}
 		
 		// return result
-		$result = array();
+		$result = array('attachments' => array(), 'errors' => array());
 		foreach ($attachments as $attachment) {
-			$result[$attachment->filename] = array(
+			$result['attachments'][$attachment->filename] = array(
 				'filename' => $attachment->filename,
 				'filesize' => $attachment->filesize,
 				'isImage' => $attachment->isImage,
@@ -122,6 +131,14 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 				'url' => LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))
 			);
 		}
+		foreach ($failedUploads as $failedUpload) {
+			$result['errors'][$failedUpload->getFilename()] = array(
+				'filename' => $failedUpload->getFilename(),
+				'filesize' => $failedUpload->getFilesize(),
+				'errorType' => $failedUpload->getValidationErrorType()
+			);
+		}
+		
 		return $result;
 	}
 	

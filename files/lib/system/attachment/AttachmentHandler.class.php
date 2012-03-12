@@ -12,6 +12,12 @@ class AttachmentHandler implements \Countable {
 	protected $objectType = null;
 	
 	/**
+	 * object type
+	 * @var wcf\system\attachment\IAttachmentObjectType
+	 */
+	protected $processor = null;
+	
+	/**
 	 * object id
 	 * @var integer
 	 */
@@ -38,6 +44,7 @@ class AttachmentHandler implements \Countable {
 	 */
 	public function __construct($objectType, $objectID, $tmpHash = '') {
 		$this->objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType);
+		$this->processor = $this->objectType->getProcessor();
 		$this->objectID = $objectID;
 		$this->tmpHash = $tmpHash;
 	}
@@ -85,5 +92,26 @@ class AttachmentHandler implements \Countable {
 				AND tmpHash = ?";
 		$statement = WCF::getDB()->prepareStatement($sql);
 		$statement->execute(array($objectID, $this->objectType->objectTypeID, $this->tmpHash));
+	}
+	
+	/**
+	 * @see wcf\system\attachment\IAttachmentObjectType::getMaxSize()
+	 */
+	public function getMaxSize() {
+		return $this->processor->getMaxSize();
+	}
+	
+	/**
+	 * @see wcf\system\attachment\IAttachmentObjectType::getAllowedExtensions()
+	 */
+	public function getAllowedExtensions() {
+		return $this->processor->getAllowedExtensions();
+	}
+	
+	/**
+	 * @see wcf\system\attachment\IAttachmentObjectType::getMaxCount()
+	 */
+	public function getMaxCount() {
+		return $this->processor->getMaxCount();
 	}
 }

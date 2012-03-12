@@ -41,26 +41,44 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	
 	_success: function(uploadID, data) {
 		for (var $i = 0; $i < this._uploadMatrix[uploadID].length; $i++) {
+			// get li
 			var $li = this._uploadMatrix[uploadID][$i];
+			
+			// remove progress bar
+			$li.find('progress').remove();
+			
+			// get filename and check result
 			var $filename = $li.data('filename');
-			if (data.returnValues[$filename]) {
+			if (data.returnValues && data.returnValues['attachments'][$filename]) {
 				// show thumbnail
-				if (data.returnValues[$filename]['tinyURL']) {
-					$li.find('img').attr('src', data.returnValues[$filename]['tinyURL']);
+				if (data.returnValues['attachments'][$filename]['tinyURL']) {
+					$li.find('img').attr('src', data.returnValues['attachments'][$filename]['tinyURL']);
 				}
+				// show file icon
 				else {
-					// show file icon
 					$li.find('img').attr('src', WCF.Icon.get('wcf.icon.attachment'));
 				}
 				
-				// remove progress bar
-				$li.find('progress').remove();
 				
-				// TODO: add buttons
-				
+				// init buttons
+				$li.data('attachmentID', data.returnValues['attachments'][$filename]['attachmentID']);
+				$li.addClass('jsAttachment');
 			}
 			else {
+				// upload icon
+				$li.find('img').attr('src', WCF.Icon.get('wcf.icon.error'));
+				var $errorMessage = '';
+				
 				// error handling
+				if (data.returnValues && data.returnValues['errors'][$filename]) {					
+					$errorMessage = data.returnValues['errors'][$filename]['errorType'];
+				}
+				else {
+					// unknown error
+					$errorMessage = 'unknown error';
+				}
+				
+				$li.find('.wcf-containerContent').append($('<p>'+$errorMessage+'</p>'));
 			}
 		}
 	}
