@@ -151,6 +151,10 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		}
 		
 		foreach ($this->objects as $attachment) {
+			if ($attachment->width <= 144 && $attachment->height < 144) {
+				continue; // image smaller than thumbnail size; skip
+			}
+			
 			$adapter = ImageHandler::getInstance()->getAdapter();
 			$adapter->loadFile($attachment->getLocation());
 			$updateData = array();
@@ -167,14 +171,16 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			}
 			
 			// create standard thumbnail
-			$thumbnailLocation = $attachment->getThumbnailLocation();
-			$thumbnail = $adapter->createThumbnail(ATTACHMENT_THUMBNAIL_WIDTH, ATTACHMENT_THUMBNAIL_HEIGHT);
-			$adapter->writeImage($thumbnail, $thumbnailLocation);
-			if (file_exists($thumbnailLocation) && ($imageData = @getImageSize($thumbnailLocation)) !== false) {
-				$updateData['thumbnailType'] = $imageData['mime'];
-				$updateData['thumbnailSize'] = @filesize($thumbnailLocation);
-				$updateData['thumbnailWidth'] = $imageData[0];
-				$updateData['thumbnailHeight'] = $imageData[1];
+			if ($attachment->width > ATTACHMENT_THUMBNAIL_WIDTH || $attachment->height > ATTACHMENT_THUMBNAIL_HEIGHT) {
+				$thumbnailLocation = $attachment->getThumbnailLocation();
+				$thumbnail = $adapter->createThumbnail(ATTACHMENT_THUMBNAIL_WIDTH, ATTACHMENT_THUMBNAIL_HEIGHT);
+				$adapter->writeImage($thumbnail, $thumbnailLocation);
+				if (file_exists($thumbnailLocation) && ($imageData = @getImageSize($thumbnailLocation)) !== false) {
+					$updateData['thumbnailType'] = $imageData['mime'];
+					$updateData['thumbnailSize'] = @filesize($thumbnailLocation);
+					$updateData['thumbnailWidth'] = $imageData[0];
+					$updateData['thumbnailHeight'] = $imageData[1];
+				}
 			}
 			
 			if (count($updateData)) {

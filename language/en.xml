@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/maelstrom/language.xsd" languagecode="en">
+	<category name="wcf.attachment">
+		<item name="wcf.attachment.file.info"><![CDATA[({@$attachment->filesize|filesize} - <b>{#$attachment->downloads}</b> times downloaded{if $attachment->downloads > 0} - latest: {@$attachment->lastDownloadTime|time}{/if})]]></item>
+		<item name="wcf.attachment.image.info"><![CDATA[{$attachment->filename}, {@$attachment->filesize|filesize}, {#$attachment->width}x{#$attachment->height}, {#$attachment->downloads} Downloads]]></item>
+		<item name="wcf.attachment.files"><![CDATA[Files]]></item>
+		<item name="wcf.attachment.images"><![CDATA[Images]]></item>	
+	</category>
+</language>
