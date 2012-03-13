@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data xmlns="http://www.woltlab.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.woltlab.com http://www.woltlab.com/XSD/maelstrom/userGroupOption.xsd">
+	<import>
+		<categories>
+			<category name="user.message.attachment">
+				<parent>user.message</parent>
+			</category>
+		</categories>
+		
+		<options>
+			<option name="user.attachment.maxSize">
+				<categoryname>user.message.attachment</categoryname>
+				<optiontype>integer</optiontype>
+				<defaultvalue>250000</defaultvalue>
+			</option>
+			<option name="user.attachment.allowedExtensions">
+				<categoryname>user.message.attachment</categoryname>
+				<optiontype>textarea</optiontype>
+				<defaultvalue><![CDATA[gif
+jpg
+jpeg
+png
+bmp
+zip
+txt
+pdf]]></defaultvalue>
+			</option>
+			<option name="user.attachment.maxCount">
+				<categoryname>user.message.attachment</categoryname>
+				<optiontype>integer</optiontype>
+				<defaultvalue>10</defaultvalue>
+			</option>
+			<option name="user.attachment.quota">
+				<categoryname>user.message.attachment</categoryname>
+				<optiontype>integer</optiontype>
+				<defaultvalue>100000000</defaultvalue>
+			</option>
+		</options>
+	</import>
+</data>
