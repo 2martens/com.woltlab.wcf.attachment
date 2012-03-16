@@ -24,6 +24,31 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	protected $className = 'wcf\data\attachment\AttachmentEditor';
 	
 	/**
+	 * Validates the delete action.
+	 */
+	public function validateDelete() {
+		// read objects
+		if (!count($this->objects)) {
+			$this->readObjects();
+		}
+		
+		if (!count($this->objects)) {
+			throw new ValidateActionException('Invalid object id');
+		}
+		
+		foreach ($this->objects as $attachment) {
+			if ($attachment->tmpHash) {
+				// TODO: validation
+			}
+			else {
+				if (!$attacment->canDelete()) {
+					throw new ValidateActionException('Insufficient permissions');
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Validates the upload action.
 	 */
 	public function validateUpload() {
