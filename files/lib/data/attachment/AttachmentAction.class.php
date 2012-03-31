@@ -2,6 +2,7 @@
 namespace wcf\data\attachment;
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\AbstractDatabaseObjectAction;
+use wcf\system\event\EventHandler;
 use wcf\system\exception\ValidateActionException;
 use wcf\system\image\ImageHandler;
 use wcf\system\request\LinkHandler;
@@ -22,6 +23,20 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	 * @see	wcf\data\AbstractDatabaseObjectAction::$className
 	 */
 	protected $className = 'wcf\data\attachment\AttachmentEditor';
+	
+	/**
+	 * Current attachment object. Used to communicate with Event-Listeners.
+	 * 
+	 * @var wcf\data\attachment\Attachment
+	 */
+	public $eventAttachment = null;
+	
+	/**
+	 * Current data. Used to communicate with Event-Listeners.
+	 * 
+	 * @var array
+	 */
+	public $eventData = array();
 	
 	/**
 	 * Validates the delete action.
@@ -126,6 +141,13 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 				if ($attachment->isImage) {
 					$thumbnails[] = $attachment;
 				}
+				else {
+					// check whether we can create thumbnails for this file
+					$this->eventAttachment = $attachment;
+					$this->eventData = array('hasThumbnail' => false);
+					EventHandler::getInstance()->fireAction($this, 'checkThumbnail');
+					if ($this->eventData['hasThumbnail']) $thumbnails[] = $attachment;
+				}
 				$attachments[] = $attachment;
 			}
 			else {
@@ -176,6 +198,20 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		}
 		
 		foreach ($this->objects as $attachment) {
+			if (!$attachment->isImage) {
+				// create thumbnails for every file that isn't an image
+				$this->eventAttachment = $attachment;
+				$this->eventData = array();
+				
+				EventHandler::getInstance()->fireAction($this, 'generateThumbnail');
+				
+				if (count($this->eventData)) {
+					$attachment->update($this->eventData);
+				}
+				
+				continue;
+			}
+			
 			if ($attachment->width <= 144 && $attachment->height < 144) {
 				continue; // image smaller than thumbnail size; skip
 			}
