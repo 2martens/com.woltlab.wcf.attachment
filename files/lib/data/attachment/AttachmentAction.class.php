@@ -41,7 +41,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 				// TODO: validation
 			}
 			else {
-				if (!$attacment->canDelete()) {
+				if (!$attachment->canDelete()) {
 					throw new ValidateActionException('Insufficient permissions');
 				}
 			}
