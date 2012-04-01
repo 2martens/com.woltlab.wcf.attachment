@@ -33,8 +33,9 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	},
 	
 	_initFile: function(file) {
-		var $li = $('<li class="wcf-container"><p class="wcf-containerIcon"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /></p><div class="wcf-containerContent"><p>'+file.name+'</p><p>'+file.size+'</p><p><progress max="100"></progress></p></div></li>');
+		var $li = $('<li class="box48"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /><div><hgroup><h1>'+file.name+'</h1><h2><small>'+file.size+'</small></h2><h3><progress max="100"></progress></h3></hgroup><ul></ul></div></li>');
 		this._fileListSelector.append($li);
+		this._fileListSelector.show();
 		
 		return $li;
 	},
@@ -61,8 +62,8 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				
 				
 				// init buttons
-				$li.data('attachmentID', data.returnValues['attachments'][$filename]['attachmentID']);
-				$li.addClass('jsAttachment');
+				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
+				$li.find('ul').append($deleteButton);
 			}
 			else {
 				// upload icon
