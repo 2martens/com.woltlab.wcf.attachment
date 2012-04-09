@@ -8,7 +8,7 @@ use wcf\system\request\IRouteController;
  * Represents an attachment.
  * 
  * @author	Marcel Werk
- * @copyright	2001-2011 WoltLab GmbH
+ * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
@@ -31,13 +31,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 * @return boolean
 	 */
 	public function canDownload() {
-		$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
-		$processor = $objectType->getProcessor();
-		if ($processor !== null) {
-			return $processor->canDownload($this->objectID);
-		}
-		
-		return true;
+		return $this->getPermission('canDownload');
 	}
 	
 	/**
@@ -46,10 +40,29 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 * @return boolean
 	 */
 	public function canViewPreview() {
+		return $this->getPermission('canViewPreview');
+	}
+	
+	/**
+	 * Returns true, if a user has the permission to delete the preview of this attachment.
+	 * 
+	 * @return boolean
+	 */
+	public function canDelete() {
+		return $this->getPermission('canDelete');
+	}
+	
+	/**
+	 * Checks permissions.
+	 * 
+	 * @param	string		$permission
+	 * @return	boolean
+	 */
+	protected function getPermission($permission) {
 		$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
 		$processor = $objectType->getProcessor();
 		if ($processor !== null) {
-			return $processor->canViewPreview($this->objectID);
+			return call_user_func(array($processor, $permission), $this->objectID);
 		}
 		
 		return true;

@@ -7,7 +7,7 @@ use wcf\system\WCF;
  * Provides functions to edit attachments.
  *
  * @author	Marcel Werk
- * @copyright	2001-2011 WoltLab GmbH
+ * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
@@ -48,6 +48,9 @@ class AttachmentEditor extends DatabaseObjectEditor {
 		return parent::deleteAll($objectIDs);
 	}
 	
+	/**
+	 * Deletes attachment files.
+	 */
 	public function deleteFiles() {
 		@unlink($this->getLocation());
 		if ($this->tinyThumbnailType) {

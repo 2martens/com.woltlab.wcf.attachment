@@ -2,6 +2,16 @@
 namespace wcf\data\attachment;
 use wcf\data\object\type\ObjectTypeCache;
 
+/**
+ * Represents a grouped list of attachments.
+ * 
+ * @author	Marcel Werk
+ * @copyright	2001-2012 WoltLab GmbH
+ * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
+ * @package	com.woltlab.wcf.attachment
+ * @subpackage	data.attachment
+ * @category 	Community Framework
+ */
 class GroupedAttachmentList extends AttachmentList {
 	/**
 	 * grouped objects

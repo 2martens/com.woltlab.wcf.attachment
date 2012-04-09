@@ -4,6 +4,16 @@ use wcf\system\attachment\IAttachmentObjectType;
 use wcf\system\WCF;
 use wcf\util\ArrayUtil;
 
+/**
+ * Provides a default implementation for attachment object types.
+ * 
+ * @author	Marcel Werk
+ * @copyright	2001-2012 WoltLab GmbH
+ * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
+ * @package	com.woltlab.wcf.attachment
+ * @subpackage	system.attachment
+ * @category 	Community Framework
+ */
 abstract class AbstractAttachmentObjectType implements IAttachmentObjectType {
 	/**
 	 * @see wcf\system\attachment\IAttachmentObjectType::getMaxSize()

@@ -4,6 +4,16 @@ use wcf\data\attachment\AttachmentList;
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\system\WCF;
 
+/**
+ * Handles uploaded attachments.
+ * 
+ * @author	Marcel Werk
+ * @copyright	2001-2012 WoltLab GmbH
+ * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
+ * @package	com.woltlab.wcf.attachment
+ * @subpackage	system.attachment
+ * @category 	Community Framework
+ */
 class AttachmentHandler implements \Countable {
 	/**
 	 * object type

@@ -53,13 +53,12 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 			if (data.returnValues && data.returnValues['attachments'][$filename]) {
 				// show thumbnail
 				if (data.returnValues['attachments'][$filename]['tinyURL']) {
-					$li.find('img').attr('src', data.returnValues['attachments'][$filename]['tinyURL']);
+					$li.find('img').attr('src', data.returnValues['attachments'][$filename]['tinyURL']).addClass('thumbnail');
 				}
 				// show file icon
 				else {
 					$li.find('img').attr('src', WCF.Icon.get('wcf.icon.attachment'));
 				}
-				
 				
 				// init buttons
 				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
@@ -79,7 +78,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 					$errorMessage = 'unknown error';
 				}
 				
-				$li.find('.wcf-containerContent').append($('<p>'+$errorMessage+'</p>'));
+				$li.find('hgroup').append($('<small class="innerError">'+$errorMessage+'</small>'));
 			}
 		}
 	}
