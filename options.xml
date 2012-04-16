@@ -28,12 +28,12 @@
 			<option name="attachment_thumbnail_height">
 				<categoryname>message.attachment</categoryname>
 				<optiontype>integer</optiontype>
-				<defaultvalue><![CDATA[320]]></defaultvalue>
+				<defaultvalue><![CDATA[210]]></defaultvalue>
 			</option>
 			<option name="attachment_thumbnail_width">
 				<categoryname>message.attachment</categoryname>
 				<optiontype>integer</optiontype>
-				<defaultvalue><![CDATA[320]]></defaultvalue>
+				<defaultvalue><![CDATA[280]]></defaultvalue>
 			</option>
 		</options>
 	</import>
