@@ -35,7 +35,7 @@
 					{foreach from=$attachmentList->getGroupedObjects($objectID) item=attachment}
 						{if !$attachment->isImage}
 							<li class="box24">
-								<a href="{link controller='Attachment' object=$attachment}{/link}"><img src="{icon size='L'}attachment1{/icon}" alt="" class="icon24" /></a>
+								<a href="{link controller='Attachment' object=$attachment}{/link}"><img src="{icon size='L'}attachment{/icon}" alt="" class="icon24" /></a>
 								
 								<hgroup>
 									<h1><a href="{link controller='Attachment' object=$attachment}{/link}">{$attachment->filename}</a></h1>
