@@ -35,4 +35,11 @@ abstract class AbstractAttachmentObjectType implements IAttachmentObjectType {
 	public function getMaxCount() {
 		return WCF::getSession()->getPermission('user.attachment.maxCount');
 	}
+	
+	/**
+	 * @see wcf\system\attachment\IAttachmentObjectType::canViewPreview()
+	 */
+	public function canViewPreview($objectID) {
+		return $this->canDownload($objectID);
+	}
 }
