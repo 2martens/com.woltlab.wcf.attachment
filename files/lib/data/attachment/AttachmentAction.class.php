@@ -2,11 +2,13 @@
 namespace wcf\data\attachment;
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\AbstractDatabaseObjectAction;
+use wcf\system\attachment\AttachmentHandler;
 use wcf\system\event\EventHandler;
 use wcf\system\exception\ValidateActionException;
 use wcf\system\image\ImageHandler;
 use wcf\system\request\LinkHandler;
 use wcf\system\WCF;
+use wcf\util\FileUtil;
 
 /**
  * Executes attachment-related actions.
@@ -84,7 +86,11 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			throw new ValidateActionException('Insufficient permissions');
 		}
 		
-		// TODO: check max count of uploads
+		// check max count of uploads
+		$handler = new AttachmentHandler($this->parameters['objectType'], intval($this->parameters['objectID']), $this->parameters['tmpHash']);
+		if ($handler->count() + count($this->parameters['__files']->getFiles()) > $processor->getMaxCount()) {
+			throw new ValidateActionException('maximum number of attachments exceeded');
+		}
 		
 		// check max filesize, allowed file extensions etc.
 		$this->parameters['__files']->validateFiles($processor->getMaxSize(), $processor->getAllowedExtensions());
@@ -167,17 +173,31 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		// return result
 		$result = array('attachments' => array(), 'errors' => array());
-		foreach ($attachments as $attachment) {
-			$result['attachments'][$attachment->filename] = array(
-				'filename' => $attachment->filename,
-				'filesize' => $attachment->filesize,
-				'isImage' => $attachment->isImage,
-				'attachmentID' => $attachment->attachmentID,
-				'tinyURL' => LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment), 'tiny=1'),
-				'thumbnailURL' => LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment), 'thumbnail=1'),
-				'url' => LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))
-			);
+		if (count($attachments)) {
+			// get attachment ids
+			$attachmentIDs = array();
+			foreach ($attachments as $attachment) $attachmentIDs[] = $attachment->attachmentID;
+			
+			// get attachments from database (check thumbnail status)
+			$attachmentList = new AttachmentList();
+			$attachmentList->getConditionBuilder()->add('attachment.attachmentID IN (?)', array($attachmentIDs));
+			$attachmentList->sqlLimit = 0;
+			$attachmentList->readObjects();
+			
+			foreach ($attachmentList as $attachment) {
+				$result['attachments'][$attachment->filename] = array(
+					'filename' => $attachment->filename,
+					'filesize' => $attachment->filesize,
+					'formattedFilesize' => FileUtil::formatFilesize($attachment->filesize),
+					'isImage' => $attachment->isImage,
+					'attachmentID' => $attachment->attachmentID,
+					'tinyURL' => ($attachment->tinyThumbnailType ? LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment), 'tiny=1') : ''),
+					'thumbnailURL' => ($attachment->thumbnailType ? LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment), 'thumbnail=1') : ''),
+					'url' => LinkHandler::getInstance()->getLink('Attachment', array('object' => $attachment))
+				);
+			}
 		}
+		
 		foreach ($failedUploads as $failedUpload) {
 			$result['errors'][$failedUpload->getFilename()] = array(
 				'filename' => $failedUpload->getFilename(),

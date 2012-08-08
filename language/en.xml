@@ -4,6 +4,14 @@
 		<item name="wcf.attachment.file.info"><![CDATA[({@$attachment->filesize|filesize}, <b>{#$attachment->downloads}</b> times downloaded{if $attachment->downloads > 0}, latest: {@$attachment->lastDownloadTime|time}{/if})]]></item>
 		<item name="wcf.attachment.image.info"><![CDATA[{@$attachment->filesize|filesize}, {#$attachment->width}x{#$attachment->height}, {#$attachment->downloads} Downloads]]></item>
 		<item name="wcf.attachment.files"><![CDATA[Files]]></item>
-		<item name="wcf.attachment.images"><![CDATA[Images]]></item>	
+		<item name="wcf.attachment.images"><![CDATA[Images]]></item>
+		<item name="wcf.attachment.attachments"><![CDATA[Attachments]]></item>
+		<item name="wcf.attachment.delete.sure"><![CDATA[Are you sure you want to remove this attachment?]]></item>
+		<item name="wcf.attachment.upload.error.invalidExtension"><![CDATA[The file has an invalid file extension.]]></item>
+		<item name="wcf.attachment.upload.error.tooLarge"><![CDATA[The file size is too large.]]></item>
+		<item name="wcf.attachment.upload.error.uploadFailed"><![CDATA[An unknown error has occurred during the upload.]]></item>
+		<item name="wcf.attachment.upload.limits"><![CDATA[Maximum number of attachments: {#$attachmentHandler->getMaxCount()}<br />
+Maximum file size: {@$attachmentHandler->getMaxSize()|filesize}<br />
+Allowed file extensions: {', '|implode:$attachmentHandler->getAllowedExtensions()}]]></item>
 	</category>
 </language>

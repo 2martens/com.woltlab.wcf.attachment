@@ -14,13 +14,20 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	_tmpHash: '',
 	_parentObjectID: 0,
 	
-	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash, parentObjectID) {
-		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true });
+	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash, parentObjectID, maxUploads) {
+		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true, "maxUploads": maxUploads });
 		
 		this._objectType = objectType;
 		this._objectID = objectID;
 		this._tmpHash = tmpHash;
 		this._parentObjectID = parentObjectID;
+	},
+	
+	_upload: function() {
+		// remove failed uploads
+		this._fileListSelector.find('li.uploadFailed').remove();
+		
+		this._super();
 	},
 
 	_getParameters: function() {
@@ -33,7 +40,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	},
 	
 	_initFile: function(file) {
-		var $li = $('<li class="box48"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /><div><hgroup><h1>'+file.name+'</h1><h2><small>'+file.size+'</small></h2><h3><progress max="100"></progress></h3></hgroup><ul></ul></div></li>');
+		var $li = $('<li class="box48"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /><div><hgroup><h1>'+file.name+'</h1><h2><progress max="100"></progress></h2></hgroup><ul></ul></div></li>');
 		this._fileListSelector.append($li);
 		this._fileListSelector.show();
 		
@@ -60,6 +67,20 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 					$li.find('img').attr('src', WCF.Icon.get('wcf.icon.attachment'));
 				}
 				
+				// update attachment link
+				$link = $('<a href=""></a>');
+				$link.text($filename).attr('href', data.returnValues['attachments'][$filename]['url']);
+				
+				
+				if (data.returnValues['attachments'][$filename]['isImage'] != 0) {
+					console.debug(data.returnValues['attachments'][$filename]['isImage']);
+					$link.attr('rel', 'imageviewer').attr('title', $filename);
+				}
+				$li.find('h1').empty().append($link);
+				
+				// update file size
+				$li.find('h2').append('<small>'+data.returnValues['attachments'][$filename]['formattedFilesize']+'</small>');
+
 				// init buttons
 				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
 				$li.find('ul').append($deleteButton);
@@ -70,16 +91,20 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				var $errorMessage = '';
 				
 				// error handling
-				if (data.returnValues && data.returnValues['errors'][$filename]) {					
+				if (data.returnValues && data.returnValues['errors'][$filename]) {
 					$errorMessage = data.returnValues['errors'][$filename]['errorType'];
 				}
 				else {
 					// unknown error
-					$errorMessage = 'unknown error';
+					$errorMessage = 'uploadFailed';
 				}
 				
-				$li.find('hgroup').append($('<small class="innerError">'+$errorMessage+'</small>'));
+				$li.find('hgroup').append($('<small class="innerError">'+WCF.Language.get('wcf.attachment.upload.error.'+$errorMessage)+'</small>'));
+				$li.addClass('uploadFailed');
 			}
+			
+			// fix webkit rendering bug
+			$li.css('display', 'block');
 		}
 	}
 });

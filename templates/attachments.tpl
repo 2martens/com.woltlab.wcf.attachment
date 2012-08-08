@@ -23,8 +23,6 @@
 					{/foreach}
 				{/content}	
 			</ul>
-			
-			{include file='imageViewer'}
 		</fieldset>
 	{/hascontent}
 	
