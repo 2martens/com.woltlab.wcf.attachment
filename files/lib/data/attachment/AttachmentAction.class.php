@@ -7,6 +7,7 @@ use wcf\system\event\EventHandler;
 use wcf\system\exception\ValidateActionException;
 use wcf\system\image\ImageHandler;
 use wcf\system\request\LinkHandler;
+use wcf\system\upload\DefaultUploadFileValidationStrategy;
 use wcf\system\WCF;
 use wcf\util\FileUtil;
 
@@ -93,7 +94,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		}
 		
 		// check max filesize, allowed file extensions etc.
-		$this->parameters['__files']->validateFiles($processor->getMaxSize(), $processor->getAllowedExtensions());
+		$this->parameters['__files']->validateFiles(new DefaultUploadFileValidationStrategy($processor->getMaxSize(), $processor->getAllowedExtensions()));
 	}
 	
 	/**
