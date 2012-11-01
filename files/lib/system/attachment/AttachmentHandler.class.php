@@ -12,36 +12,36 @@ use wcf\system\WCF;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	system.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class AttachmentHandler implements \Countable {
 	/**
 	 * object type
-	 * @var wcf\data\object\type\ObjectType
+	 * @var	wcf\data\object\type\ObjectType
 	 */
 	protected $objectType = null;
 	
 	/**
 	 * object type
-	 * @var wcf\system\attachment\IAttachmentObjectType
+	 * @var	wcf\system\attachment\IAttachmentObjectType
 	 */
 	protected $processor = null;
 	
 	/**
 	 * object id
-	 * @var integer
+	 * @var	integer
 	 */
 	protected $objectID = 0;
 	
 	/**
 	 * temp hash
-	 * @var string
+	 * @var	string
 	 */
 	protected $tmpHash = '';
 	
 	/**
 	 * list of attachments
-	 * @var wcf\data\attachment\AttachmentList
+	 * @var	wcf\data\attachment\AttachmentList
 	 */
 	protected $attachmentList = null;
 	

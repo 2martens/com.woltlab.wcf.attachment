@@ -3,7 +3,6 @@
 	<packageinformation>
 		<packagename>Attachment System</packagename>
 		<packagedescription>Provides support for attachments.</packagedescription>
-		<isunique>1</isunique>
 		<version>1.0.0 Alpha 1</version>
 		<date>2011-03-03</date>
 	</packageinformation>

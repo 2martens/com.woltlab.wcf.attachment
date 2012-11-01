@@ -19,7 +19,7 @@ use wcf\util\FileUtil;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class AttachmentAction extends AbstractDatabaseObjectAction {
 	/**
@@ -28,15 +28,13 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	protected $className = 'wcf\data\attachment\AttachmentEditor';
 	
 	/**
-	 * Current attachment object. Used to communicate with Event-Listeners.
-	 * 
+	 * current attachment object, used to communicate with event listeners
 	 * @var wcf\data\attachment\Attachment
 	 */
 	public $eventAttachment = null;
 	
 	/**
-	 * Current data. Used to communicate with Event-Listeners.
-	 * 
+	 * current data, used to communicate with event listeners.
 	 * @var array
 	 */
 	public $eventData = array();
@@ -46,12 +44,12 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	 */
 	public function validateDelete() {
 		// read objects
-		if (!count($this->objects)) {
+		if (empty($this->objects)) {
 			$this->readObjects();
-		}
-		
-		if (!count($this->objects)) {
-			throw new ValidateActionException('Invalid object id');
+			
+			if (empty($this->objects)) {
+				throw new ValidateActionException('Invalid object id');
+			}
 		}
 		
 		foreach ($this->objects as $attachment) {
@@ -166,7 +164,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		// generate thumbnails
 		if (ATTACHMENT_ENABLE_THUMBNAILS) {
-			if (count($thumbnails)) {
+			if (!empty($thumbnails)) {
 				$action = new AttachmentAction($thumbnails, 'generateThumbnails');
 				$action->executeAction();
 			}
@@ -174,7 +172,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		// return result
 		$result = array('attachments' => array(), 'errors' => array());
-		if (count($attachments)) {
+		if (!empty($attachments)) {
 			// get attachment ids
 			$attachmentIDs = array();
 			foreach ($attachments as $attachment) $attachmentIDs[] = $attachment->attachmentID;
@@ -214,7 +212,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	 * Generates thumbnails.
 	 */
 	public function generateThumbnails() {
-		if (!count($this->objects)) {
+		if (!empty($this->objects)) {
 			$this->readObjects();
 		}
 		
@@ -226,7 +224,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 				
 				EventHandler::getInstance()->fireAction($this, 'generateThumbnail');
 				
-				if (count($this->eventData)) {
+				if (!empty($this->eventData)) {
 					$attachment->update($this->eventData);
 				}
 				
@@ -265,7 +263,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 				}
 			}
 			
-			if (count($updateData)) {
+			if (!empty($updateData)) {
 				$attachment->update($updateData);
 			}
 		}

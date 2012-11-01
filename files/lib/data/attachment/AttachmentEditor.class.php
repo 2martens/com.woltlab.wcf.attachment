@@ -1,17 +1,18 @@
 <?php
 namespace wcf\data\attachment;
 use wcf\data\DatabaseObjectEditor;
+use wcf\system\database\util\PreparedStatementConditionBuilder;
 use wcf\system\WCF;
 
 /**
  * Provides functions to edit attachments.
- *
+ * 
  * @author	Marcel Werk
  * @copyright	2001-2012 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class AttachmentEditor extends DatabaseObjectEditor {
 	/**
@@ -35,12 +36,16 @@ class AttachmentEditor extends DatabaseObjectEditor {
 	 * @see wcf\data\IEditableObject::deleteAll()
 	 */
 	public static function deleteAll(array $objectIDs = array()) {
+		// delete files first
+		$conditionBuilder = new PreparedStatementConditionBuilder();
+		$conditionBuilder->add("attachmentID IN (?)", array($objectIDs));
+		
 		$sql = "SELECT	*
 			FROM	wcf".WCF_N."_attachment
-			WHERE	attachmentID IN (".str_repeat('?,', count($objectIDs) - 1)."?)";
+			".$conditionBuilder;
 		$statement = WCF::getDB()->prepareStatement($sql);
-		$statement->execute($objectIDs);
-		while ($attachment = $statement->fetchObject(self::$baseClass)) {
+		$statement->execute($conditionBuilder->getParameters());
+		while ($attachment = $statement->fetchObject(static::$baseClass)) {
 			$editor = new AttachmentEditor($attachment);
 			$editor->deleteFiles();
 		}

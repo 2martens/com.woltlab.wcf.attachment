@@ -12,7 +12,7 @@ use wcf\system\request\IRouteController;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class Attachment extends DatabaseObject implements IRouteController {
 	/**
