@@ -10,7 +10,7 @@ use wcf\data\object\type\ObjectTypeCache;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class GroupedAttachmentList extends AttachmentList {
 	/**
@@ -42,7 +42,7 @@ class GroupedAttachmentList extends AttachmentList {
 	 */
 	public function __construct($objectType) {
 		parent::__construct();
-	
+		
 		$this->objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType);
 		$this->getConditionBuilder()->add('attachment.objectTypeID = ?', array($this->objectType->objectTypeID));
 	}

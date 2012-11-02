@@ -9,7 +9,7 @@ namespace wcf\system\attachment;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	system.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 interface IAttachmentObjectType {
 	/**

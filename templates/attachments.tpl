@@ -44,7 +44,7 @@
 							</li>
 						{/if}
 					{/foreach}
-				{/content}	
+				{/content}
 			</ul>
 		</fieldset>
 	{/hascontent}

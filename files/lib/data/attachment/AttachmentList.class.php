@@ -10,7 +10,7 @@ use wcf\data\DatabaseObjectList;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class AttachmentList extends DatabaseObjectList {
 	/**

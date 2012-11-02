@@ -15,43 +15,46 @@ use wcf\system\WCF;
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	page
- * @category 	Community Framework
+ * @category	Community Framework
  */
 class AttachmentPage extends AbstractPage {
 	/**
-	 * @see wcf\page\IPage::$useTemplate
+	 * @see	wcf\page\IPage::$useTemplate
 	 */
 	public $useTemplate = false;
 	
 	/**
 	 * attachment id
-	 * @var integer
+	 * @var	integer
 	 */
 	public $attachmentID = 0;
 	
 	/**
 	 * attachment object
-	 * @var wcf\data\attachment\Attachment
+	 * @var	wcf\data\attachment\Attachment
 	 */
 	public $attachment = null;
 	
 	/**
 	 * shows the tiny thumbnail
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $tiny = 0;
 	
 	/**
 	 * shows the standard thumbnail
-	 * @var boolean
+	 * @var	boolean
 	 */
 	public $thumbnail = 0;
 	
-	
+	/**
+	 * list of mime types which belong to files that are displayed inline
+	 * @var	array<string>
+	 */
 	public static $inlineMimeTypes = array('image/gif', 'image/jpeg', 'image/png', 'application/pdf', 'image/pjpeg');
 	
 	/**
-	 * @see wcf\page\IPage::readParameters()
+	 * @see	wcf\page\IPage::readParameters()
 	 */
 	public function readParameters() {
 		parent::readParameters();
@@ -83,7 +86,7 @@ class AttachmentPage extends AbstractPage {
 	}
 	
 	/**
-	 * @see wcf\page\IPage::show()
+	 * @see	wcf\page\IPage::show()
 	 */
 	public function show() {
 		parent::show();
@@ -96,7 +99,7 @@ class AttachmentPage extends AbstractPage {
 				'lastDownloadTime' => TIME_NOW
 			));
 		}
-
+		
 		// get file data
 		if ($this->tiny) {
 			$mimeType = $this->attachment->tinyThumbnailType;
@@ -113,7 +116,7 @@ class AttachmentPage extends AbstractPage {
 			$filesize = $this->attachment->filesize;
 			$location = $this->attachment->getLocation();
 		}
-
+		
 		// range support
 		$startByte = 0;
 		$endByte = $filesize - 1;
@@ -131,7 +134,7 @@ class AttachmentPage extends AbstractPage {
 						$startByte = $first;
 						if ($last > 0) {
 							$endByte = $last;
-						}					
+						}
 					}
 					
 					// validate given range
@@ -166,12 +169,12 @@ class AttachmentPage extends AbstractPage {
 		
 		// send file size
 		@header('Content-Length: '.($endByte + 1 - $startByte));
-			
+		
 		// cache headers
 		@header('Cache-control: max-age=31536000, private');
 		@header('Expires: '.gmdate('D, d M Y H:i:s', TIME_NOW + 31536000).' GMT');
 		@header('Last-Modified: '.gmdate('D, d M Y H:i:s', $this->attachment->uploadTime).' GMT');
-			
+		
 		// show attachment
 		if ($startByte > 0 || $endByte < $filesize - 1) {
 			$file = new File($location, 'rb');

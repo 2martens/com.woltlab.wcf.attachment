@@ -9,11 +9,34 @@ WCF.Attachment = {};
  * @see	WCF.Upload
  */
 WCF.Attachment.Upload = WCF.Upload.extend({
+	/**
+	 * object type of the object the uploaded attachments belong to
+	 * @var	string
+	 */
 	_objectType: '',
+	
+	/**
+	 * id of the object the uploaded attachments belong to
+	 * @var	string
+	 */
 	_objectID: 0,
+	
+	/**
+	 * temporary hash to identify uploaded attachments
+	 * @var	string
+	 */
 	_tmpHash: '',
+	
+	/**
+	 * id of the parent object of the object the uploaded attachments belong
+	 * to
+	 * @var	string
+	 */
 	_parentObjectID: 0,
 	
+	/**
+	 * @see	WCF.Upload.init()
+	 */
 	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash, parentObjectID, maxUploads) {
 		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true, "maxUploads": maxUploads });
 		
@@ -23,13 +46,19 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		this._parentObjectID = parentObjectID;
 	},
 	
+	/**
+	 * @see	WCF.Upload._upload()
+	 */
 	_upload: function() {
 		// remove failed uploads
 		this._fileListSelector.find('li.uploadFailed').remove();
 		
 		this._super();
 	},
-
+	
+	/**
+	 * @see	WCF.Upload._getParameters()
+	 */
 	_getParameters: function() {
 		return {
 			objectType: this._objectType,
@@ -39,6 +68,9 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		};
 	},
 	
+	/**
+	 * @see	WCF.Upload._initFile()
+	 */
 	_initFile: function(file) {
 		var $li = $('<li class="box48"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /><div><hgroup><h1>'+file.name+'</h1><h2><progress max="100"></progress></h2></hgroup><ul></ul></div></li>');
 		this._fileListSelector.append($li);
@@ -47,6 +79,9 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		return $li;
 	},
 	
+	/**
+	 * @see	WCF.Upload._success()
+	 */
 	_success: function(uploadID, data) {
 		for (var $i = 0; $i < this._uploadMatrix[uploadID].length; $i++) {
 			// get li
@@ -68,9 +103,8 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				}
 				
 				// update attachment link
-				$link = $('<a href=""></a>');
+				var $link = $('<a href=""></a>');
 				$link.text($filename).attr('href', data.returnValues['attachments'][$filename]['url']);
-				
 				
 				if (data.returnValues['attachments'][$filename]['isImage'] != 0) {
 					console.debug(data.returnValues['attachments'][$filename]['isImage']);
@@ -80,7 +114,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				
 				// update file size
 				$li.find('h2').append('<small>'+data.returnValues['attachments'][$filename]['formattedFilesize']+'</small>');
-
+				
 				// init buttons
 				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
 				$li.find('ul').append($deleteButton);
