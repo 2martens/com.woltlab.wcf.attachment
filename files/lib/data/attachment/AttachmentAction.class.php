@@ -29,13 +29,13 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	
 	/**
 	 * current attachment object, used to communicate with event listeners
-	 * @var wcf\data\attachment\Attachment
+	 * @var	wcf\data\attachment\Attachment
 	 */
 	public $eventAttachment = null;
 	
 	/**
 	 * current data, used to communicate with event listeners.
-	 * @var array
+	 * @var	array
 	 */
 	public $eventData = array();
 	

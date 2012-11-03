@@ -15,13 +15,13 @@ use wcf\data\object\type\ObjectTypeCache;
 class GroupedAttachmentList extends AttachmentList {
 	/**
 	 * grouped objects
-	 * @var array
+	 * @var	array
 	 */
 	public $groupedObjects = array();
 	
 	/**
 	 * object type
-	 * @var wcf\data\object\type\ObjectType
+	 * @var	wcf\data\object\type\ObjectType
 	 */
 	protected $objectType = null;
 	
@@ -48,7 +48,7 @@ class GroupedAttachmentList extends AttachmentList {
 	}
 	
 	/**
-	 * @see wcf\data\DatabaseObjectList::readObjects()
+	 * @see	wcf\data\DatabaseObjectList::readObjects()
 	 */
 	public function readObjects() {
 		parent::readObjects();

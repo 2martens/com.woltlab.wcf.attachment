@@ -21,7 +21,7 @@ class AttachmentEditor extends DatabaseObjectEditor {
 	public static $baseClass = 'wcf\data\attachment\Attachment';
 	
 	/**
-	 * @see wcf\data\IEditableObject::delete()
+	 * @see	wcf\data\IEditableObject::delete()
 	 */
 	public function delete() {
 		$sql = "DELETE FROM	wcf".WCF_N."_attachment
@@ -33,7 +33,7 @@ class AttachmentEditor extends DatabaseObjectEditor {
 	}
 	
 	/**
-	 * @see wcf\data\IEditableObject::deleteAll()
+	 * @see	wcf\data\IEditableObject::deleteAll()
 	 */
 	public static function deleteAll(array $objectIDs = array()) {
 		// delete files first
