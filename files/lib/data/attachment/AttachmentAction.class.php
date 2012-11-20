@@ -4,7 +4,8 @@ use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\AbstractDatabaseObjectAction;
 use wcf\system\attachment\AttachmentHandler;
 use wcf\system\event\EventHandler;
-use wcf\system\exception\ValidateActionException;
+use wcf\system\exception\PermissionDeniedException;
+use wcf\system\exception\UserInputException;
 use wcf\system\image\ImageHandler;
 use wcf\system\request\LinkHandler;
 use wcf\system\upload\DefaultUploadFileValidationStrategy;
@@ -48,7 +49,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			$this->readObjects();
 			
 			if (empty($this->objects)) {
-				throw new ValidateActionException('Invalid object id');
+				throw new UserInputException('objectIDs');
 			}
 		}
 		
@@ -58,7 +59,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			}
 			else {
 				if (!$attachment->canDelete()) {
-					throw new ValidateActionException('Insufficient permissions');
+					throw new PermissionDeniedException();
 				}
 			}
 		}
@@ -70,11 +71,11 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	public function validateUpload() {
 		// validate object type
 		if (!isset($this->parameters['objectType'])) {
-			throw new ValidateActionException("missing parameter 'objectType'");
+			throw new UserInputException('objectType');
 		}
 		$objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $this->parameters['objectType']);
 		if ($objectType === null) {
-			throw new ValidateActionException("invalid object type '".$this->parameters['objectType']."' given");
+			throw new UserInputException('objectType');
 		}
 		
 		// get processor
@@ -82,13 +83,16 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		// check upload permissions
 		if (!$processor->canUpload((!empty($this->parameters['objectID']) ? intval($this->parameters['objectID']) : 0), (!empty($this->parameters['parentObjectID']) ? intval($this->parameters['parentObjectID']) : 0))) {
-			throw new ValidateActionException('Insufficient permissions');
+			throw new PermissionDeniedException();
 		}
 		
 		// check max count of uploads
 		$handler = new AttachmentHandler($this->parameters['objectType'], intval($this->parameters['objectID']), $this->parameters['tmpHash']);
 		if ($handler->count() + count($this->parameters['__files']->getFiles()) > $processor->getMaxCount()) {
-			throw new ValidateActionException('maximum number of attachments exceeded');
+			throw new UserInputException('files', 'exceededQuota', array(
+				'current' => $handler->count(),
+				'quota' => $processor->getMaxCount()
+			));
 		}
 		
 		// check max filesize, allowed file extensions etc.
