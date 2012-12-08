@@ -83,6 +83,8 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	 * @see	WCF.Upload._success()
 	 */
 	_success: function(uploadID, data) {
+		WCF.DOMNodeInsertedHandler.enable();
+		
 		for (var $i = 0; $i < this._uploadMatrix[uploadID].length; $i++) {
 			// get li
 			var $li = this._uploadMatrix[uploadID][$i];
@@ -116,7 +118,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				$li.find('h2').append('<small>'+data.returnValues['attachments'][$filename]['formattedFilesize']+'</small>');
 				
 				// init buttons
-				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
+				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip pointer" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
 				$li.find('ul').append($deleteButton);
 			}
 			else {
@@ -140,5 +142,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 			// fix webkit rendering bug
 			$li.css('display', 'block');
 		}
+		
+		WCF.DOMNodeInsertedHandler.disable();
 	}
 });
