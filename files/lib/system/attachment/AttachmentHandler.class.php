@@ -62,7 +62,7 @@ class AttachmentHandler implements \Countable {
 	/**
 	 * Returns a list of attachments.
 	 * 
-	 * @return wcf\data\attachment\AttachmentList
+	 * @return	wcf\data\attachment\AttachmentList
 	 */
 	public function getAttachmentList() {
 		if ($this->attachmentList === null) {
