@@ -25,6 +25,9 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	protected static $databaseTableIndexName = 'attachmentID';
 	
+	
+	protected $embedded = false;
+	
 	/**
 	 * Returns true, if a user has the permission to download this attachment.
 	 * 
@@ -107,6 +110,24 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	public function getTitle() {
 		return $this->filename;
+	}
+	
+	/**
+	 * Marks this attachment as embedded.
+	 * 
+	 * @return	boolean
+	 */
+	public function markAsEmbedded() {
+		$this->embedded = true;
+	}
+	
+	/**
+	 * Returns true, if this attachment is embedded.
+	 * 
+	 * @return boolean
+	 */
+	public function isEmbedded() {
+		return $this->embedded;
 	}
 	
 	/**
