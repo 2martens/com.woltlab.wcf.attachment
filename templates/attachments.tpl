@@ -6,7 +6,7 @@
 			<ul>
 				{content}
 					{foreach from=$attachmentList->getGroupedObjects($objectID) item=attachment}
-						{if $attachment->isImage}
+						{if $attachment->isImage && !$attachment->isEmbedded()}
 							<li class="attachmentThumbnail">
 								{if $attachment->thumbnailType}
 									<a href="{link controller='Attachment' object=$attachment}{/link}" rel="imageviewer" title="{$attachment->filename}"><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" style="{*width: 144px; height: 144px; border-radius: 10px; box-shadow: 2px 2px 7px rgba(0, 0, 0, .5);*}" /></a>
@@ -33,7 +33,7 @@
 			<ul>
 				{content}
 					{foreach from=$attachmentList->getGroupedObjects($objectID) item=attachment}
-						{if !$attachment->isImage}
+						{if !$attachment->isImage && !$attachment->isEmbedded()}
 							<li class="box24">
 								<a href="{link controller='Attachment' object=$attachment}{/link}"><img src="{icon}attachment{/icon}" alt="" class="icon24" /></a>
 								

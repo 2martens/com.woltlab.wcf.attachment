@@ -27,7 +27,6 @@ CREATE TABLE wcf1_attachment (
 	downloads INT(10) NOT NULL DEFAULT 0,
 	lastDownloadTime INT(10) NOT NULL DEFAULT 0,
 	uploadTime INT(10) NOT NULL DEFAULT 0,
-	embedded TINYINT(1) NOT NULL DEFAULT 0,
 	showOrder SMALLINT(5) NOT NULL DEFAULT 0,
 	KEY (objectTypeID, objectID),
 	KEY (objectTypeID, tmpHash)

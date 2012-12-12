@@ -25,10 +25,13 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	protected static $databaseTableIndexName = 'attachmentID';
 	
+	
+	protected $embedded = false;
+	
 	/**
 	 * Returns true, if a user has the permission to download this attachment.
 	 * 
-	 * @return boolean
+	 * @return	boolean
 	 */
 	public function canDownload() {
 		return $this->getPermission('canDownload');
@@ -37,7 +40,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	/**
 	 * Returns true, if a user has the permission to view the preview of this attachment.
 	 * 
-	 * @return boolean
+	 * @return	boolean
 	 */
 	public function canViewPreview() {
 		return $this->getPermission('canViewPreview');
@@ -46,7 +49,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	/**
 	 * Returns true, if a user has the permission to delete the preview of this attachment.
 	 * 
-	 * @return boolean
+	 * @return	boolean
 	 */
 	public function canDelete() {
 		return $this->getPermission('canDelete');
@@ -71,7 +74,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	/**
 	 * Returns the physical location of this attachment.
 	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public function getLocation() {
 		return self::getStorage() . substr($this->fileHash, 0, 2) . '/' . ($this->attachmentID) . '-' . $this->fileHash;
@@ -80,7 +83,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	/**
 	 * Returns the physical location of the tiny thumbnail.
 	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public function getTinyThumbnailLocation() {
 		return self::getStorage() . substr($this->fileHash, 0, 2) . '/' . ($this->attachmentID) . '-tiny-' . $this->fileHash;
@@ -89,7 +92,7 @@ class Attachment extends DatabaseObject implements IRouteController {
 	/**
 	 * Returns the physical location of the standard thumbnail.
 	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public function getThumbnailLocation() {
 		return self::getStorage() . substr($this->fileHash, 0, 2) . '/' . ($this->attachmentID) . '-thumbnail-' . $this->fileHash;
@@ -110,9 +113,27 @@ class Attachment extends DatabaseObject implements IRouteController {
 	}
 	
 	/**
+	 * Marks this attachment as embedded.
+	 * 
+	 * @return	boolean
+	 */
+	public function markAsEmbedded() {
+		$this->embedded = true;
+	}
+	
+	/**
+	 * Returns true, if this attachment is embedded.
+	 * 
+	 * @return boolean
+	 */
+	public function isEmbedded() {
+		return $this->embedded;
+	}
+	
+	/**
 	 * Returns the storage path.
 	 * 
-	 * @return string
+	 * @return	string
 	 */
 	public static function getStorage() {
 		if (ATTACHMENT_STORAGE) {
