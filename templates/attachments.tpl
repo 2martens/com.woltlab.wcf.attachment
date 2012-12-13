@@ -9,7 +9,7 @@
 						{if $attachment->isImage && !$attachment->isEmbedded()}
 							<li class="attachmentThumbnail">
 								{if $attachment->thumbnailType}
-									<a href="{link controller='Attachment' object=$attachment}{/link}" rel="imageviewer" title="{$attachment->filename}"><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" style="{*width: 144px; height: 144px; border-radius: 10px; box-shadow: 2px 2px 7px rgba(0, 0, 0, .5);*}" /></a>
+									<a href="{link controller='Attachment' object=$attachment}{/link}" title="{$attachment->filename}" class="jsImageViewer"><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" style="{*width: 144px; height: 144px; border-radius: 10px; box-shadow: 2px 2px 7px rgba(0, 0, 0, .5);*}" /></a>
 								{else}
 									<img src="{link controller='Attachment' object=$attachment}{/link}" alt="" style="{*width: {@$attachment->width}px; height: {@$attachment->height}px; margin-top: {@(144-$attachment->height)/2}px; margin-left: {@(144-$attachment->width)/2}px; border-radius: 10px; box-shadow: 2px 2px 7px rgba(0, 0, 0, .5);*}" />
 								{/if}
