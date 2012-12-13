@@ -1,5 +1,7 @@
 <?php
 namespace wcf\system\attachment;
+use wcf\data\attachment\AttachmentAction;
+
 use wcf\system\database\util\PreparedStatementConditionBuilder;
 
 use wcf\data\attachment\AttachmentList;
@@ -125,6 +127,25 @@ class AttachmentHandler implements \Countable {
 			".$conditions;
 		$statement = WCF::getDB()->prepareStatement($sql);
 		$statement->execute($parameters);
+	}
+	
+	/**
+	 * Removes all attachments for given object ids by type.
+	 * 
+	 * @param	string		$objectType
+	 * @param	array<integer>	$objectIDs
+	 */
+	public static function removeAttachments($objectType, array $objectIDs) {
+		$attachmentList = new AttachmentList();
+		$attachmentList->getConditionBuilder()->add("objectTypeID = ?", array(ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType)->objectTypeID));
+		$attachmentList->getConditionBuilder()->add("objectID IN (?)", array($objectIDs));
+		$attachmentList->sqlLimit = 0;
+		$attachmentList->readObjects();
+		
+		if (count($attachmentList)) {
+			$attachmentAction = new AttachmentAction($attachmentList->getObjects(), 'delete');
+			$attachmentAction->executeAction();
+		}
 	}
 	
 	/**
