@@ -83,8 +83,6 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	 * @see	WCF.Upload._success()
 	 */
 	_success: function(uploadID, data) {
-		WCF.DOMNodeInsertedHandler.enable();
-		
 		for (var $i = 0; $i < this._uploadMatrix[uploadID].length; $i++) {
 			// get li
 			var $li = this._uploadMatrix[uploadID][$i];
@@ -143,6 +141,6 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 			$li.css('display', 'block');
 		}
 		
-		WCF.DOMNodeInsertedHandler.disable();
+		WCF.DOMNodeInsertedHandler.forceExecution();
 	}
 });
