@@ -1,25 +1,28 @@
 /* attachment thumbnail list */
 .attachmentThumbnailList, .attachmentFileList {
-	margin-top: @wcfGapMedium;
-	padding-top: @wcfGapSmall;
+	padding-top: 7px !important;
 	
-	> legend {
-		border-bottom: 0;
-		border-top: 1px dotted @wcfContainerBorderColor;
-		color: @wcfColor;
-		font-size: @wcfTitleFontSize;
-		padding: @wcfGapTiny 0 0;
+	> fieldset {
+		padding: 0;
+		
+		> legend {
+			border-bottom: 0;
+			font-size: @wcfTitleFontSize;
+			padding-bottom: 7px;
+		}
 	}
 }
 
 .attachmentThumbnailList {
-	> ul > li {
+	padding-bottom: 7px !important;
+	
+	> fieldset > ul > li {
 		margin: 0 0 @wcfGapMedium @wcfGapSmall;
 	}
 }
 
 .attachmentFileList {
-	> ul > li {
+	> fieldset > ul > li {
 		&:not(:first-child) {
 			margin-top: @wcfGapTiny;
 		}
