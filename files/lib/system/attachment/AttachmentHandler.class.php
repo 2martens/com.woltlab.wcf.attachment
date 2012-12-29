@@ -1,5 +1,9 @@
 <?php
 namespace wcf\system\attachment;
+use wcf\data\attachment\AttachmentAction;
+
+use wcf\system\database\util\PreparedStatementConditionBuilder;
+
 use wcf\data\attachment\AttachmentList;
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\system\WCF;
@@ -102,6 +106,46 @@ class AttachmentHandler implements \Countable {
 				AND tmpHash = ?";
 		$statement = WCF::getDB()->prepareStatement($sql);
 		$statement->execute(array($objectID, $this->objectType->objectTypeID, $this->tmpHash));
+	}
+	
+	/**
+	 * Transfers attachments to a different object id of the same type (e.g. merging content)
+	 * 
+	 * @param	string		$objectType
+	 * @param	integer		$newObjectID
+	 * @param	array<integer>	$oldObjectIDs
+	 */
+	public static function transferAttachments($objectType, $newObjectID, array $oldObjectIDs) {
+		$conditions = new PreparedStatementConditionBuilder();
+		$conditions->add("objectTypeID = ?", array(ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType)->objectTypeID));
+		$conditions->add("objectID IN (?)", array($oldObjectIDs));
+		$parameters = $conditions->getParameters();
+		array_unshift($parameters, $newObjectID);
+		
+		$sql = "UPDATE	wcf".WCF_N."_attachment
+			SET	objectID = ?
+			".$conditions;
+		$statement = WCF::getDB()->prepareStatement($sql);
+		$statement->execute($parameters);
+	}
+	
+	/**
+	 * Removes all attachments for given object ids by type.
+	 * 
+	 * @param	string		$objectType
+	 * @param	array<integer>	$objectIDs
+	 */
+	public static function removeAttachments($objectType, array $objectIDs) {
+		$attachmentList = new AttachmentList();
+		$attachmentList->getConditionBuilder()->add("objectTypeID = ?", array(ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType)->objectTypeID));
+		$attachmentList->getConditionBuilder()->add("objectID IN (?)", array($objectIDs));
+		$attachmentList->sqlLimit = 0;
+		$attachmentList->readObjects();
+		
+		if (count($attachmentList)) {
+			$attachmentAction = new AttachmentAction($attachmentList->getObjects(), 'delete');
+			$attachmentAction->executeAction();
+		}
 	}
 	
 	/**

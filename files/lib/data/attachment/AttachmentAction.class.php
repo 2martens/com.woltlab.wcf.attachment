@@ -24,6 +24,11 @@ use wcf\util\FileUtil;
  */
 class AttachmentAction extends AbstractDatabaseObjectAction {
 	/**
+	 * @see	wcf\data\AbstractDatabaseObjectAction::$allowGuestAccess
+	 */
+	protected $allowGuestAccess = array('delete', 'upload');
+	
+	/**
 	 * @see	wcf\data\AbstractDatabaseObjectAction::$className
 	 */
 	protected $className = 'wcf\data\attachment\AttachmentEditor';
@@ -118,7 +123,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			$data = array(
 				'objectTypeID' => $objectType->objectTypeID,
 				'objectID' => intval($this->parameters['objectID']),
-				'userID' => WCF::getUser()->userID,
+				'userID' => (WCF::getUser()->userID ? WCF::getUser()->userID : null),
 				'tmpHash' => $this->parameters['tmpHash'],
 				'filename' => $file->getFilename(),
 				'filesize' => $file->getFilesize(),
