@@ -25,7 +25,10 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	protected static $databaseTableIndexName = 'attachmentID';
 	
-	
+	/**
+	 * indicates if the attachment is embedded
+	 * @var	boolean
+	 */
 	protected $embedded = false;
 	
 	/**
