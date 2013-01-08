@@ -7,10 +7,10 @@
 				<ul>
 					{content}
 						{foreach from=$attachmentList->getGroupedObjects($objectID) item=attachment}
-							{if $attachment->isImage && !$attachment->isEmbedded()}
+							{if $attachment->showAsImage() && !$attachment->isEmbedded()}
 								<li class="attachmentThumbnail">
-									{if $attachment->thumbnailType}
-										<a href="{link controller='Attachment' object=$attachment}{/link}" class="jsImageViewer" title="{$attachment->filename}"><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" /></a>
+									{if $attachment->hasThumbnail()}
+										<a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->canDownload()} class="jsImageViewer" title="{$attachment->filename}"{/if}><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" /></a>
 									{else}
 										<img src="{link controller='Attachment' object=$attachment}{/link}" alt="" />
 									{/if}
@@ -22,7 +22,7 @@
 								</li>
 							{/if}
 						{/foreach}
-					{/content}	
+					{/content}
 				</ul>
 			</fieldset>
 		</div>
@@ -36,7 +36,7 @@
 				<ul>
 					{content}
 						{foreach from=$attachmentList->getGroupedObjects($objectID) item=attachment}
-							{if !$attachment->isImage && !$attachment->isEmbedded()}
+							{if $attachment->showAsFile() && !$attachment->isEmbedded()}
 								<li class="box24">
 									<a href="{link controller='Attachment' object=$attachment}{/link}"><img src="{icon}attachment{/icon}" alt="" class="icon24" /></a>
 									

@@ -64,6 +64,17 @@ class GroupedAttachmentList extends AttachmentList {
 	}
 	
 	/**
+	 * Sets the permissions for attachment access.
+	 *
+	 * @param	array<boolean>		$permissions
+	 */
+	public function setPermissions(array $permissions) {
+		foreach ($this->objects as $attachment) {
+			$attachment->setPermissions($permissions);
+		}
+	}
+	
+	/**
 	 * Returns the objects of the list.
 	 * 
 	 * @return	array<wcf\data\DatabaseObject>

@@ -25,8 +25,17 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	protected static $databaseTableIndexName = 'attachmentID';
 	
-	
+	/**
+	 * true, if this attachment is embedded
+	 * @var boolean
+	 */
 	protected $embedded = false;
+	
+	/**
+	 * user permissions for attachment access 
+	 * @var array<boolean>
+	 */
+	protected $permissions = array();
 	
 	/**
 	 * Returns true, if a user has the permission to download this attachment.
@@ -62,13 +71,26 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 * @return	boolean
 	 */
 	protected function getPermission($permission) {
-		$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
-		$processor = $objectType->getProcessor();
-		if ($processor !== null) {
-			return call_user_func(array($processor, $permission), $this->objectID);
+		if (!isset($this->permissions[$permission])) {
+			$this->permissions[$permission] = true;
+			
+			$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
+			$processor = $objectType->getProcessor();
+			if ($processor !== null) {
+				$this->permissions[$permission] = call_user_func(array($processor, $permission), $this->objectID);
+			}
 		}
 		
-		return true;
+		return $this->permissions[$permission];
+	}
+	
+	/**
+	 * Sets the permissions for attachment access.
+	 * 
+	 * @param	array<boolean>		$permissions
+	 */
+	public function setPermissions(array $permissions) {
+		$this->permissions = $permissions;
 	}
 	
 	/**
@@ -128,6 +150,39 @@ class Attachment extends DatabaseObject implements IRouteController {
 	 */
 	public function isEmbedded() {
 		return $this->embedded;
+	}
+	
+	/**
+	 * Returns true, if this attachment should be shown as an image.
+	 * 
+	 * @return	boolean
+	 */
+	public function showAsImage() {
+		if ($this->isImage) {
+			if ($this->canDownload()) return true;
+			
+			if ($this->canViewPreview() && $this->hasThumbnail()) return true;
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Returns true, if this attachment has a thumbnail.
+	 * 
+	 * @return	boolean
+	 */
+	public function hasThumbnail() {
+		return ($this->thumbnailType ? true : false);
+	}
+	
+	/**
+	 * Returns true, if this attachment should be shown as a file.
+	 * 
+	 * @return	boolean
+	 */
+	public function showAsFile() {
+		return !$this->showAsImage();
 	}
 	
 	/**

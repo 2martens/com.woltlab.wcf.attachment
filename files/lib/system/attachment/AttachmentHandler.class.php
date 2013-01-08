@@ -1,11 +1,9 @@
 <?php
 namespace wcf\system\attachment;
 use wcf\data\attachment\AttachmentAction;
-
-use wcf\system\database\util\PreparedStatementConditionBuilder;
-
 use wcf\data\attachment\AttachmentList;
 use wcf\data\object\type\ObjectTypeCache;
+use wcf\system\database\util\PreparedStatementConditionBuilder;
 use wcf\system\WCF;
 
 /**
