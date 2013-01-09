@@ -12,7 +12,7 @@
 									{if $attachment->hasThumbnail()}
 										<a href="{link controller='Attachment' object=$attachment}{/link}"{if $attachment->canDownload()} class="jsImageViewer" title="{$attachment->filename}"{/if}><img src="{link controller='Attachment' object=$attachment}thumbnail=1{/link}" alt="" /></a>
 									{else}
-										<img src="{link controller='Attachment' object=$attachment}{/link}" alt="" />
+										<img src="{link controller='Attachment' object=$attachment}{/link}" alt="" style="margin-top: {@ATTACHMENT_THUMBNAIL_HEIGHT/2-$attachment->height/2}px; margin-left: {@ATTACHMENT_THUMBNAIL_WIDTH/2-$attachment->width/2}px" />
 									{/if}
 									
 									<hgroup title="{lang}wcf.attachment.image.info{/lang}">

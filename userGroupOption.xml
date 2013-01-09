@@ -11,7 +11,7 @@
 			<option name="user.attachment.maxSize">
 				<categoryname>user.message.attachment</categoryname>
 				<optiontype>integer</optiontype>
-				<defaultvalue>250000</defaultvalue>
+				<defaultvalue>1000000</defaultvalue>
 			</option>
 			<option name="user.attachment.allowedExtensions">
 				<categoryname>user.message.attachment</categoryname>
