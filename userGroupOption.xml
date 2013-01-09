@@ -10,8 +10,8 @@
 		<options>
 			<option name="user.attachment.maxSize">
 				<categoryname>user.message.attachment</categoryname>
-				<optiontype>integer</optiontype>
-				<defaultvalue>1000000</defaultvalue>
+				<optiontype>filesize</optiontype>
+				<defaultvalue>1 MB</defaultvalue>
 			</option>
 			<option name="user.attachment.allowedExtensions">
 				<categoryname>user.message.attachment</categoryname>
@@ -32,8 +32,8 @@ pdf]]></defaultvalue>
 			</option>
 			<option name="user.attachment.quota">
 				<categoryname>user.message.attachment</categoryname>
-				<optiontype>integer</optiontype>
-				<defaultvalue>100000000</defaultvalue>
+				<optiontype>filesize</optiontype>
+				<defaultvalue>100 MB</defaultvalue>
 			</option>
 		</options>
 	</import>
