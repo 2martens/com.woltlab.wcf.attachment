@@ -10,7 +10,7 @@
 		<options>
 			<option name="user.attachment.maxSize">
 				<categoryname>user.message.attachment</categoryname>
-				<optiontype>filesize</optiontype>
+				<optiontype>fileSize</optiontype>
 				<defaultvalue>1000000</defaultvalue>
 			</option>
 			<option name="user.attachment.allowedExtensions">
@@ -32,7 +32,7 @@ pdf]]></defaultvalue>
 			</option>
 			<option name="user.attachment.quota">
 				<categoryname>user.message.attachment</categoryname>
-				<optiontype>filesize</optiontype>
+				<optiontype>fileSize</optiontype>
 				<defaultvalue>100000000</defaultvalue>
 			</option>
 		</options>
