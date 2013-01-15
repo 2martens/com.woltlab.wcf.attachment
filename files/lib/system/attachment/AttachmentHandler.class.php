@@ -69,7 +69,6 @@ class AttachmentHandler implements \Countable {
 	public function getAttachmentList() {
 		if ($this->attachmentList === null) {
 			$this->attachmentList = new AttachmentList();
-			$this->attachmentList->sqlLimit = 0;
 			$this->attachmentList->sqlOrderBy = 'attachment.showOrder';
 			$this->attachmentList->getConditionBuilder()->add('objectTypeID = ?', array($this->objectType->objectTypeID));
 			if ($this->objectID) {
@@ -137,7 +136,6 @@ class AttachmentHandler implements \Countable {
 		$attachmentList = new AttachmentList();
 		$attachmentList->getConditionBuilder()->add("objectTypeID = ?", array(ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $objectType)->objectTypeID));
 		$attachmentList->getConditionBuilder()->add("objectID IN (?)", array($objectIDs));
-		$attachmentList->sqlLimit = 0;
 		$attachmentList->readObjects();
 		
 		if (count($attachmentList)) {

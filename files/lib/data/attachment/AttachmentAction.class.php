@@ -189,7 +189,6 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			// get attachments from database (check thumbnail status)
 			$attachmentList = new AttachmentList();
 			$attachmentList->getConditionBuilder()->add('attachment.attachmentID IN (?)', array($attachmentIDs));
-			$attachmentList->sqlLimit = 0;
 			$attachmentList->readObjects();
 			
 			foreach ($attachmentList as $attachment) {
