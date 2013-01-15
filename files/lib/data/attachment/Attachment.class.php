@@ -121,13 +121,6 @@ class Attachment extends DatabaseObject implements IRouteController {
 	}
 	
 	/**
-	 * @see	wcf\system\request\IRouteController::getID()
-	 */
-	public function getID() {
-		return $this->attachmentID;
-	}
-	
-	/**
 	 * @see	wcf\system\request\IRouteController::getTitle()
 	 */
 	public function getTitle() {
