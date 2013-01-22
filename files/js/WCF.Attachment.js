@@ -72,7 +72,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	 * @see	WCF.Upload._initFile()
 	 */
 	_initFile: function(file) {
-		var $li = $('<li class="box48"><img src="'+WCF.Icon.get('wcf.icon.loading')+'" alt="" style="width: 48px; height: 48px" /><div><hgroup><h1>'+file.name+'</h1><h2><progress max="100"></progress></h2></hgroup><ul></ul></div></li>');
+		var $li = $('<li class="box48"><span class="icon icon48 icon-spinner" /><div><hgroup><h1>'+file.name+'</h1><h2><progress max="100"></progress></h2></hgroup><ul></ul></div></li>');
 		this._fileListSelector.append($li);
 		this._fileListSelector.show();
 		
@@ -99,7 +99,9 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				}
 				// show file icon
 				else {
-					$li.find('img').attr('src', WCF.Icon.get('wcf.icon.attachment'));
+					var $img = $li.find('img');
+					$('<span class="icon icon16 icon-paper-clip" />').appendTo($img.parent());
+					$img.remove();
 				}
 				
 				// update attachment link
@@ -116,12 +118,14 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				$li.find('h2').append('<small>'+data.returnValues['attachments'][$filename]['formattedFilesize']+'</small>');
 				
 				// init buttons
-				var $deleteButton = $('<li><img src="'+WCF.Icon.get('wcf.icon.delete')+'" alt="" title="'+WCF.Language.get('wcf.global.button.delete')+'" class="jsDeleteButton jsTooltip pointer" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
+				var $deleteButton = $('<li><span class="icon icon16 icon-remove pointer jsTooltip jsDeleteButton" title="'+WCF.Language.get('wcf.global.button.delete')+'" data-object-id="'+data.returnValues['attachments'][$filename]['attachmentID']+'" data-confirm-message="'+WCF.Language.get('wcf.attachment.delete.sure')+'" /></li>');
 				$li.find('ul').append($deleteButton);
 			}
 			else {
 				// upload icon
-				$li.find('img').attr('src', WCF.Icon.get('wcf.icon.error'));
+				var $img = $li.find('img');
+				$('<span class="icon icon16 icon-ban-circle" />').appendTo($img.parent());
+				$img.remove();
 				var $errorMessage = '';
 				
 				// error handling
