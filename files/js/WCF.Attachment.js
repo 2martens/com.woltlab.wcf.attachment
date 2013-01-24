@@ -43,13 +43,46 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	 * @see	WCF.Upload.init()
 	 */
 	init: function(buttonSelector, fileListSelector, objectType, objectID, tmpHash, parentObjectID, maxUploads, wysiwygContainerID) {
-		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true, "maxUploads": maxUploads });
+		this._super(buttonSelector, fileListSelector, 'wcf\\data\\attachment\\AttachmentAction', { multiple: true, maxUploads: maxUploads });
 		
 		this._objectType = objectType;
 		this._objectID = objectID;
 		this._tmpHash = tmpHash;
 		this._parentObjectID = parentObjectID;
 		this._wysiwygContainerID = wysiwygContainerID;
+		
+		this._buttonSelector.children('p.button').click($.proxy(this._validateLimit, this));
+	},
+	
+	/**
+	 * Validates upload limits.
+	 * 
+	 * @return	boolean
+	 */
+	_validateLimit: function() {
+		var $innerError = this._buttonSelector.next('small.innerError');
+		
+		// check maximum uploads
+		var $max = this._options.maxUploads - this._fileListSelector.children('li').length;
+		if ($max <= 0 || $max < this._fileUpload.prop('files').length) {
+			// reached limit
+			var $errorMessage = ($max <= 0) ? WCF.Language.get('wcf.attachment.upload.error.reachedLimit') : WCF.Language.get('wcf.attachment.upload.error.reachedRemainingLimit').replace(/#remaining#/, $max);
+			if (!$innerError.length) {
+				$innerError = $('<small class="innerError" />').insertAfter(this._buttonSelector);
+			}
+			
+			$innerError.html($errorMessage);
+			
+			// reset value of file input (the 'files' prop is actually readonly!)
+			this._fileUpload.attr('value', '');
+			
+			return false;
+		}
+		
+		// remove previous errors
+		$innerError.remove();
+		
+		return true;
 	},
 	
 	/**
@@ -57,9 +90,16 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 	 */
 	_upload: function() {
 		// remove failed uploads
-		this._fileListSelector.find('li.uploadFailed').remove();
+		this._fileListSelector.children('li.uploadFailed').remove();
+		
+		if (!this._validateLimit()) {
+			return false;
+		}
 		
 		this._super();
+		
+		// reset value of file input (the 'files' prop is actually readonly!)
+		this._fileUpload.attr('value', '');
 	},
 	
 	/**
