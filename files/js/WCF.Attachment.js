@@ -64,7 +64,8 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		
 		// check maximum uploads
 		var $max = this._options.maxUploads - this._fileListSelector.children('li').length;
-		if ($max <= 0 || $max < this._fileUpload.prop('files').length) {
+		var $filesLength = (this._fileUpload) ? this._fileUpload.prop('files').length : 0;
+		if ($max <= 0 || $max < $filesLength) {
 			// reached limit
 			var $errorMessage = ($max <= 0) ? WCF.Language.get('wcf.attachment.upload.error.reachedLimit') : WCF.Language.get('wcf.attachment.upload.error.reachedRemainingLimit').replace(/#remaining#/, $max);
 			if (!$innerError.length) {
@@ -74,7 +75,9 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 			$innerError.html($errorMessage);
 			
 			// reset value of file input (the 'files' prop is actually readonly!)
-			this._fileUpload.attr('value', '');
+			if (this._fileUpload) {
+				this._fileUpload.attr('value', '');
+			}
 			
 			return false;
 		}
@@ -85,13 +88,11 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		return true;
 	},
 	
+	
 	/**
 	 * @see	WCF.Upload._upload()
 	 */
 	_upload: function() {
-		// remove failed uploads
-		this._fileListSelector.children('li.uploadFailed').remove();
-		
 		if (!this._validateLimit()) {
 			return false;
 		}
@@ -99,7 +100,19 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		this._super();
 		
 		// reset value of file input (the 'files' prop is actually readonly!)
-		this._fileUpload.attr('value', '');
+		if (this._fileUpload) {
+			this._fileUpload.attr('value', '');
+		}
+	},
+	
+	/**
+	 * @see	WCF.Upload._createUploadMatrix()
+	 */
+	_createUploadMatrix: function(files) {
+		// remove failed uploads
+		this._fileListSelector.children('li.uploadFailed').remove();
+		
+		return this._super(files);
 	},
 	
 	/**
