@@ -134,7 +134,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			$data = array(
 				'objectTypeID' => $objectType->objectTypeID,
 				'objectID' => intval($this->parameters['objectID']),
-				'userID' => (WCF::getUser()->userID ? WCF::getUser()->userID : null),
+				'userID' => (WCF::getUser()->userID ?: null),
 				'tmpHash' => (!$this->parameters['objectID'] ? $this->parameters['tmpHash'] : ''),
 				'filename' => $file->getFilename(),
 				'filesize' => $file->getFilesize(),
