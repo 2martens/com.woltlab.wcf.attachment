@@ -16,7 +16,7 @@ use wcf\util\FileUtil;
  * Executes attachment-related actions.
  * 
  * @author	Marcel Werk
- * @copyright	2001-2012 WoltLab GmbH
+ * @copyright	2001-2013 WoltLab GmbH
  * @license	GNU Lesser General Public License <http://opensource.org/licenses/lgpl-license.php>
  * @package	com.woltlab.wcf.attachment
  * @subpackage	data.attachment
@@ -74,10 +74,21 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 	 * Validates the upload action.
 	 */
 	public function validateUpload() {
-		// validate object type
-		if (!isset($this->parameters['objectType'])) {
-			throw new UserInputException('objectType');
+		// IE<10 fallback
+		if (isset($_POST['isFallback'])) {
+			$this->parameters['objectType'] = (isset($_POST['objectType'])) ? $_POST['objectType'] : '';
+			$this->parameters['objectID'] = (isset($_POST['objectID'])) ? $_POST['objectID'] : 0;
+			$this->parameters['parentObjectID'] = (isset($_POST['parentObjectID'])) ? $_POST['parentObjectID'] : 0;
+			$this->parameters['tmpHash'] = (isset($_POST['tmpHash'])) ? $_POST['tmpHash'] : '';
 		}
+		
+		// read variables
+		$this->readString('objectType');
+		$this->readInteger('objectID', true);
+		$this->readInteger('parentObjectID', true);
+		$this->readString('tmpHash');
+		
+		// validate object type
 		$objectType = ObjectTypeCache::getInstance()->getObjectTypeByName('com.woltlab.wcf.attachment.objectType', $this->parameters['objectType']);
 		if ($objectType === null) {
 			throw new UserInputException('objectType');
@@ -123,7 +134,7 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 			$data = array(
 				'objectTypeID' => $objectType->objectTypeID,
 				'objectID' => intval($this->parameters['objectID']),
-				'userID' => (WCF::getUser()->userID ? WCF::getUser()->userID : null),
+				'userID' => (WCF::getUser()->userID ?: null),
 				'tmpHash' => (!$this->parameters['objectID'] ? $this->parameters['tmpHash'] : ''),
 				'filename' => $file->getFilename(),
 				'filesize' => $file->getFilesize(),
