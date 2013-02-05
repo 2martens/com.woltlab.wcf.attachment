@@ -167,7 +167,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				
 				if (data.returnValues['attachments'][$filename]['isImage'] != 0) {
 					console.debug(data.returnValues['attachments'][$filename]['isImage']);
-					$link.attr('rel', 'imageviewer').attr('title', $filename);
+					$link.addClass('jsImageViewer').attr('title', $filename);
 				}
 				$li.find('h1').empty().append($link);
 				
