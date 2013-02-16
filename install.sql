@@ -29,7 +29,8 @@ CREATE TABLE wcf1_attachment (
 	uploadTime INT(10) NOT NULL DEFAULT 0,
 	showOrder SMALLINT(5) NOT NULL DEFAULT 0,
 	KEY (objectTypeID, objectID),
-	KEY (objectTypeID, tmpHash)
+	KEY (objectTypeID, tmpHash),
+	KEY (objectID, uploadTime)
 );
 
 ALTER TABLE wcf1_attachment ADD FOREIGN KEY (objectTypeID) REFERENCES wcf1_object_type (objectTypeID) ON DELETE CASCADE;
