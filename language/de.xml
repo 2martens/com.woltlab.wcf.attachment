@@ -15,5 +15,6 @@
 		<item name="wcf.attachment.upload.limits"><![CDATA[Maximale Anzahl an Dateianhängen: {#$attachmentHandler->getMaxCount()}<br />
 Maximale Dateigröße: {@$attachmentHandler->getMaxSize()|filesize}<br />
 Erlaubte Dateiendungen: {', '|implode:$attachmentHandler->getAllowedExtensions()}]]></item>
+		<item name="wcf.attachment.insert"><![CDATA[In Text einfügen]]></item>
 	</category>
 </language>
