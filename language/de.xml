@@ -16,5 +16,6 @@
 Maximale Dateigröße: {@$attachmentHandler->getMaxSize()|filesize}<br />
 Erlaubte Dateiendungen: {', '|implode:$attachmentHandler->getAllowedExtensions()}]]></item>
 		<item name="wcf.attachment.insert"><![CDATA[In Text einfügen]]></item>
+		<item name="wcf.attachment.delete.sure"><![CDATA[Wollen Sie den Dateianhang wirklich löschen?]]></item>
 	</category>
 </language>
