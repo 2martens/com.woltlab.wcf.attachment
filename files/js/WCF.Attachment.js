@@ -52,6 +52,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		this._wysiwygContainerID = wysiwygContainerID;
 		
 		this._buttonSelector.children('p.button').click($.proxy(this._validateLimit, this));
+		this._fileListSelector.find('.jsButtonInsertAttachment').click($.proxy(this._insert, this));
 	},
 	
 	/**
