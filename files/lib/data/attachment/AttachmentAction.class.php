@@ -60,12 +60,12 @@ class AttachmentAction extends AbstractDatabaseObjectAction {
 		
 		foreach ($this->objects as $attachment) {
 			if ($attachment->tmpHash) {
-				// TODO: validation
-			}
-			else {
-				if (!$attachment->canDelete()) {
+				if ($attachment->userID != WCF::getUser()->userID) {
 					throw new PermissionDeniedException();
 				}
+			}
+			else if (!$attachment->canDelete()) {
+				throw new PermissionDeniedException();
 			}
 		}
 	}
