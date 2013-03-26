@@ -52,6 +52,7 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 		this._wysiwygContainerID = wysiwygContainerID;
 		
 		this._buttonSelector.children('p.button').click($.proxy(this._validateLimit, this));
+		this._fileListSelector.find('.jsButtonInsertAttachment').click($.proxy(this._insert, this));
 	},
 	
 	/**
@@ -233,5 +234,20 @@ WCF.Attachment.Upload = WCF.Upload.extend({
 				$textarea.val( $value.substr(0, $position) + $bbcode + $value.substr($position) );
 			}
 		}
+	},
+	
+	/**
+	 * @see	WCF.Upload._error()
+	 */
+	_error: function() {
+		// mark uploads as failed
+		this._fileListSelector.find('li').each(function(index, listItem) {
+			var $listItem = $(listItem);
+			if ($listItem.children('.icon-spinner').length) {
+				// upload icon
+				$listItem.addClass('uploadFailed').children('.icon-spinner').removeClass('icon-spinner').addClass('icon-ban-circle');
+				$listItem.find('hgroup').append($('<small class="innerError">'+WCF.Language.get('wcf.attachment.upload.error.uploadFailed')+'</small>'));
+			}
+		});
 	}
 });
