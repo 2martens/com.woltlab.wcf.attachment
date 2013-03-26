@@ -3,6 +3,7 @@ namespace wcf\data\attachment;
 use wcf\data\object\type\ObjectTypeCache;
 use wcf\data\DatabaseObject;
 use wcf\system\request\IRouteController;
+use wcf\system\WCF;
 
 /**
  * Represents an attachment.
@@ -74,10 +75,17 @@ class Attachment extends DatabaseObject implements IRouteController {
 		if (!isset($this->permissions[$permission])) {
 			$this->permissions[$permission] = true;
 			
-			$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
-			$processor = $objectType->getProcessor();
-			if ($processor !== null) {
-				$this->permissions[$permission] = call_user_func(array($processor, $permission), $this->objectID);
+			if ($this->tmpHash) {
+				if ($this->userID && $this->userID != WCF::getUser()->userID) {
+					$this->permissions[$permission] = false;
+				}
+			}
+			else {
+				$objectType = ObjectTypeCache::getInstance()->getObjectType($this->objectTypeID);
+				$processor = $objectType->getProcessor();
+				if ($processor !== null) {
+					$this->permissions[$permission] = call_user_func(array($processor, $permission), $this->objectID);
+				}
 			}
 		}
 		
